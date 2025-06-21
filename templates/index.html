@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Email Scheduler</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h2>Email Scheduler</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}
+        <div class="alert {{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endwith %}
+
+    <form method="POST">
+        <input type="email" name="to_email" placeholder="Recipient Email" required>
+        <input type="text" name="subject" placeholder="Subject" required>
+        <textarea name="message" placeholder="Message" required></textarea>
+        <input type="datetime-local" name="scheduled_time" required>
+        <button type="submit">Schedule Email</button>
+    </form>
+
+    <h3>Scheduled Emails</h3>
+    <ul>
+        {% for email in emails %}
+            <li>
+                <strong>{{ email.to_email }}</strong> - {{ email.subject }} 
+                ({{ email.scheduled_time.strftime('%Y-%m-%d %H:%M') }}) 
+                {% if email.sent %}<span class="sent">[SENT]</span>{% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
